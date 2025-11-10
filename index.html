@@ -6,106 +6,86 @@
   <title>트렌드 성향 테스트</title>
   <style>
     :root{
-      --ink:#0f172a;      /* text */
-      --muted:#475569;    /* sub text */
-      --line:#e2e8f0;     /* border */
+      --ink:#1f2937;      /* text */
+      --muted:#6b7280;    /* sub text */
+      --line:#e5e7eb;     /* border */
       --card:#ffffff;     /* surfaces */
-      --accent:#5a8cff;   /* primary accent */
-      --ok:#16a34a; --warn:#f59e0b; --violet:#7c3aed;
+      --pink-strong:#f59cc0; /* pastel pink */
+      --yellow:#fff2a3;      /* pastel yellow */
+      --accent:var(--pink-strong);
+      --accent-2:var(--yellow);
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans"; color:var(--ink); background:#fff}
+    html,body{height:100%;margin:0;padding:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans";background:#fff;color:var(--ink)}
 
-    .wrap{max-width:720px; margin:0 auto; padding:20px 16px 100px}
+    header{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line)}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo span{font-weight:800;font-size:20px}
+    .sub{font-size:14px;color:var(--muted)}
 
-    header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px}
-    .brand{display:flex; gap:10px; align-items:center}
-    .logo{width:36px; height:36px; border-radius:10px; background:var(--card); border:1px solid var(--line); display:grid; place-items:center; box-shadow:0 6px 16px rgba(0,0,0,.06)}
-    .logo span{font-weight:800}
-    h1{font-size:clamp(20px,3.8vw,30px); margin:0}
-    .sub{color:var(--muted); font-size:14px}
-
-    .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; box-shadow:0 10px 30px rgba(2,6,23,.06)}
-
+    .wrap{max-width:720px;margin:0 auto;padding-bottom:120px}
+    .card{max-width:720px;margin:20px auto;padding:24px;border:1px solid var(--line);border-radius:16px;background:var(--card);box-shadow:0 10px 20px rgba(0,0,0,.05)}
     .step{display:none}
     .step.show{display:block}
 
-    /* 버튼 바 */
-    .actions{position:fixed; left:0; right:0; bottom:0; padding:14px 16px; background:linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.95) 30%, rgba(255,255,255,1)); border-top:1px solid var(--line)}
-    .btnrow{max-width:720px; margin:0 auto; display:flex; gap:10px;}
-    button{appearance:none; border:none; cursor:pointer; padding:14px 16px; border-radius:12px; font-weight:700; font-size:16px}
-    .primary{background:var(--accent); color:white}
-    .ghost{background:transparent; color:var(--ink); border:1px solid var(--line)}
-    .muted{background:#e5e7eb; color:#334155}
-    button[disabled]{opacity:.5; cursor:not-allowed}
-
-    /* 질문 카드 */
-    .q-title{font-weight:700; font-size:18px; line-height:1.5}
-    .scale{display:flex; flex-direction:column; gap:10px; margin-top:16px}
-    .likert{display:flex; align-items:center; justify-content:space-between; gap:clamp(6px,3vw,16px);}
-    .likert .item{position:relative; display:grid; place-items:center}
-    .likert input{position:absolute; opacity:0; width:0; height:0}
-    .dot{width:clamp(40px,12vw,60px); height:clamp(40px,12vw,60px); border-radius:999px; background:#fff; border:3px solid var(--line); box-shadow:0 2px 8px rgba(2,6,23,.06); transition:transform .1s ease, border-color .2s ease, box-shadow .2s ease}
-    .likert input:checked + .dot{border-color:var(--accent); box-shadow:inset 0 0 0 6px rgba(90,140,255,.15)}
-    .likert .item:active .dot{transform:scale(.96)}
-    .scale .labels{display:flex; justify-content:space-between; font-weight:700; color:var(--muted); padding:0 4px}
-
-    /* 진행바 */
-    .progress{height:10px; background:#ffffff; border:1px solid var(--line); border-radius:999px; overflow:hidden}
-    .bar{height:100%; width:0%; background:linear-gradient(90deg, var(--accent), #7dd3fc)}
-
-    /* 결과 카드 */
-    .result-header{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
-    .tag{font-family:ui-monospace, monospace; padding:2px 6px; border:1px solid var(--line); border-radius:6px; background:#fff}
-    .gauges{display:grid; gap:10px; margin-top:12px}
-    @media (min-width:640px){ .gauges{grid-template-columns:repeat(3,1fr)} }
-    .gauge{padding:12px; border:1px solid var(--line); border-radius:12px}
-    .gauge h4{margin:0 0 8px 0; font-size:13px; color:var(--muted)}
-    .bar2{height:12px; background:#eef2ff; border-radius:999px; overflow:hidden; border:1px solid var(--line)}
-    .fill{height:100%; width:0%}
-    .fill.S{background:#60a5fa}
-    .fill.V{background:#34d399}
-    .fill.A{background:#fbbf24}
-
-    /* 해설 */
-    .section-title{margin:12px 0 6px 0; font-size:16px; font-weight:800}
-    .para{line-height:1.7}
-    .character{margin-top:10px; padding:10px 12px; border:1px dashed var(--line); border-radius:12px; background:#fafafa; color:#334155}
-    .image-slot{margin-top:14px; border:2px dashed var(--line); border-radius:12px; background:#fff; aspect-ratio:16/9; display:grid; place-items:center; color:var(--muted)}
+    .actions{position:fixed;bottom:0;left:0;right:0;padding:14px 16px;background:rgba(255,255,255,.9);backdrop-filter:blur(4px);border-top:1px solid var(--line)}
+    .btnrow{display:flex;justify-content:center;gap:10px;max-width:520px;margin:0 auto}
+    .btnrow.big button{flex:1;padding:18px 22px;font-size:18px;border-radius:999px}
+    button{appearance:none;border:none;cursor:pointer;border-radius:14px;padding:14px 18px;font-weight:700;font-size:16px;transition:all .2s ease}
+    .primary{background:linear-gradient(180deg,var(--pink-strong),#f7a9cc);color:#fff;box-shadow:0 8px 18px rgba(245,156,192,.35)}
+    .primary:hover{box-shadow:0 12px 24px rgba(245,156,192,.45)}
+    .ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+    button:active{transform:translateY(1px)}
+    button:disabled{opacity:.5;cursor:not-allowed}
     .hide{display:none !important}
+
+    .progress{height:12px;background:#fff;border:1px solid var(--line);border-radius:999px;overflow:hidden;width:140px}
+    .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--pink-strong),var(--yellow))}
+
+    .q-title{font-size:18px;font-weight:700;margin-bottom:20px;text-align:center;letter-spacing:.02em}
+    .scale{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+    .likert{display:flex;justify-content:space-between;gap:clamp(6px,3vw,16px)}
+    .likert .item{position:relative;display:grid;place-items:center}
+    .likert input{position:absolute;opacity:0;width:0;height:0}
+    .dot{width:clamp(44px,12vw,64px);height:clamp(44px,12vw,64px);border-radius:50%;background:#fff;border:3px solid var(--line);transition:all .2s ease}
+    .likert input:checked + .dot{border-color:var(--pink-strong);box-shadow:inset 0 0 0 8px rgba(245,156,192,.25)}
+    .likert .item:hover .dot{border-color:var(--yellow)}
+    .scale .labels{display:flex;justify-content:space-between;color:var(--muted);font-weight:700}
+
+    .result-header{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .tag{font-family:ui-monospace,monospace;padding:2px 6px;border:1px solid var(--line);border-radius:6px;background:#fff}
+    .gauges{display:grid;gap:10px;margin-top:6px}
+    @media (min-width:640px){ .gauges{grid-template-columns:repeat(3,1fr)} }
+    .gauge{padding:12px;border:1px solid var(--line);border-radius:12px}
+    .gauge h4{margin:0 0 8px 0;font-size:13px;color:var(--muted)}
+    .bar2{height:12px;background:#eef2ff;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+    .fill{height:100%;width:0%}
+    .fill.S{background:#f9a8d4} /* pastel pink */
+    .fill.V{background:#fde68a} /* pastel yellow */
+    .fill.A{background:#c7d2fe} /* soft indigo */
+
+    .section-title{margin:12px 0 6px 0;font-size:16px;font-weight:800}
+    .para{line-height:1.7}
+    .character{margin-top:10px;padding:10px 12px;border:1px dashed var(--line);border-radius:12px;background:#fafafa;color:#334155}
+    .image-slot{margin-top:14px;border:2px dashed var(--line);border-radius:12px;background:#fff;aspect-ratio:16/9;display:grid;place-items:center;color:var(--muted)}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo"><span>TT</span></div>
-        <div>
-          <h1>트렌드 성향 테스트</h1>
-          <div class="sub">팝업 아니긴 해 · 관객 참여형 연극</div>
-        </div>
-      </div>
-      <div id="progressWrap" style="min-width:120px">
-        <div class="progress" aria-label="진행률"><div class="bar" id="prog"></div></div>
-      </div>
-    </header>
+  <header>
+    <div class="logo"><span>TT</span><div><div>트렌드 성향 테스트</div><div class="sub">팝업 아니긴 해 · 참여형 연극</div></div></div>
+    <div id="progressWrap" class="progress"><div class="bar" id="prog"></div></div>
+  </header>
 
+  <div class="wrap">
     <!-- STEP 0: 소개 -->
     <section class="card step show" id="step0">
-      <div class="center">
-        <h2 style="margin:6px 0 0 0; padding: 0 0 6px 0">내 취향 vs 유행, 나는 어떤 타입?</h2>
-        <p class="sub" style="margin:0">질문에 차례대로 답하고 마지막에 결과를 확인하세요.</p>
-        <ul class="sub" style="margin:8px 0 0 0; padding-left:18px; text-align:left">
-          <li>문항은 한 페이지에 하나씩 표시됩니다.</li>
-          <li>각 문항은 5단계 의견 선택(전혀 아니다 → 매우 그렇다)입니다.</li>
-          <li>마지막 페이지에서 결과 카드가 나타납니다.</li>
-        </ul>
-      </div>
+      <h2 style="text-align:center;letter-spacing:.04em">내 취향 vs 유행, 나는 어떤 타입?</h2>
+      <p class="sub" style="text-align:center">질문에 차례대로 답하고 마지막에 결과를 확인하세요.</p>
+			<p class="sub" style="text-align:center">나의 타입을 확인하고 친구들과 공유해보세요!</p>
     </section>
 
-    <!-- STEP 1~10: 문항 (동적 렌더) -->
-    <section class="step" id="stepQ"><div class="card" id="qCard"></div></section>
+    <!-- STEP 1~10: 문항 -->
+    <section class="card step" id="stepQ"><div id="qCard"></div></section>
 
     <!-- STEP 11: 결과 -->
     <section class="card step" id="stepR">
@@ -127,15 +107,15 @@
 
   <!-- 고정 버튼 바 -->
   <div class="actions">
-    <div class="btnrow">
-      <button class="ghost" id="btnPrev" disabled>이전</button>
+    <div class="btnrow big" id="btnRow">
+      <button class="ghost" id="btnPrev">이전</button>
       <button class="primary" id="btnNext">시작하기</button>
     </div>
   </div>
 
   <script>
     // -------------------------------
-    // 데이터 (사용자 제공 문구 그대로)
+    // 데이터
     // -------------------------------
     const QUESTIONS = [
       { id:1, text:"나는 새로운 유행·밈을 남들보다 빨리 알아차리는 편이다.", key:"S", rev:false },
@@ -150,7 +130,6 @@
       { id:10, text:"요즘 흐름과 내 취향이 충돌하면 내 취향을 우선한다.", key:"A", rev:false },
     ];
 
-    // 결과 카드용 텍스트(그대로 노출)
     const TYPE_TEXT = {
       "트렌드 서퍼": {
         emoji:"🏄‍♂️",
@@ -194,7 +173,6 @@
       }
     };
 
-    // 프로토타입 좌표 (fallback 용)
     const PROTOTYPES = [
       { name:"트렌드 서퍼", coords:[90,90,70] },
       { name:"트렌드 스위머", coords:[70,65,60] },
@@ -207,21 +185,22 @@
     ];
 
     // -------------------------------
-    // 상태
+    // 상태/유틸/채점
     // -------------------------------
     const TOTAL = 10;           // 문항 수
     let step = 0;               // 0:소개, 1..10:문항, 11:결과
-    const answers = Array(TOTAL).fill(null); // 사용자가 고른 1..5
+    const answers = Array(TOTAL).fill(null);
 
-    // 복원 (선택)
-    try{
-      const saved = JSON.parse(localStorage.getItem('trendtest_v1'));
-      if(Array.isArray(saved) && saved.length===TOTAL){ saved.forEach((v,i)=>answers[i]=v) }
-    }catch{}
+    const $prog = document.getElementById('prog');
+    const $progressWrap = document.getElementById('progressWrap');
+    const $step0 = document.getElementById('step0');
+    const $stepQ = document.getElementById('stepQ');
+    const $stepR = document.getElementById('stepR');
+    const $qCard = document.getElementById('qCard');
+    const $btnPrev = document.getElementById('btnPrev');
+    const $btnNext = document.getElementById('btnNext');
+    const $btnRow = document.getElementById('btnRow');
 
-    // -------------------------------
-    // 채점
-    // -------------------------------
     const rev = (x) => 6 - x;
     const mean = (arr) => arr.reduce((a,b)=>a+b,0)/arr.length;
     const to100 = (avg) => ((avg-1)/4)*100;
@@ -235,34 +214,25 @@
     }
 
     function pickType(S,V,A){
-      let rule=null, type=null;
-      if(S>=80 && V>=75 && A>=60){ type = "트렌드 서퍼"; rule = "#1 서퍼" }
-      else if(S>=70 && V>=60 && A<60){ type = "트렌드 러너"; rule = "#2 러너" }
-      else if((S>=60 && V>=50 && V<75) || (S>=50 && S<70 && V>=60)){ type = "트렌드 스위머"; rule = "#3 스위머" }
-      else if(S<50 && V>=55){ type = "트렌드 찍먹러"; rule = "#4 찍먹러" }
-      else if(S>=50 && S<70 && V>=48 && V<=58 && A>=65){ type = "트렌드 밸런서"; rule = "#5 밸런서" }
-      else if(V<45 && S>=45 && A<65){ type = "트렌드 불편러"; rule = "#6 불편러" }
-      else if(V<45 && A>=65 && S<60){ type = "트렌드 챌린저"; rule = "#7 챌린저" }
-      else if(V<35 && S<40){ type = "트렌드를 거부하는 소나무"; rule = "#8 소나무" }
+      let type=null;
+      if(S>=80 && V>=75 && A>=60){ type = "트렌드 서퍼" }
+      else if(S>=70 && V>=60 && A<60){ type = "트렌드 러너" }
+      else if((S>=60 && V>=50 && V<75) || (S>=50 && S<70 && V>=60)){ type = "트렌드 스위머" }
+      else if(S<50 && V>=55){ type = "트렌드 찍먹러" }
+      else if(S>=50 && S<70 && V>=48 && V<=58 && A>=65){ type = "트렌드 밸런서" }
+      else if(V<45 && S>=45 && A<65){ type = "트렌드 불편러" }
+      else if(V<45 && A>=65 && S<60){ type = "트렌드 챌린저" }
+      else if(V<35 && S<40){ type = "트렌드를 거부하는 소나무" }
 
-      if(type) return {type, rule};
+      if(type) return type;
       const dists = PROTOTYPES.map(p=>({ name:p.name, d:Math.hypot(S-p.coords[0], V-p.coords[1], A-p.coords[2]) }))
                               .sort((a,b)=>a.d-b.d);
-      return { type:dists[0].name, rule:`fallback • ${dists[0].name}` };
+      return dists[0].name;
     }
 
     // -------------------------------
-    // 렌더링/내비게이션
+    // 렌더링
     // -------------------------------
-    const $prog = document.getElementById('prog');
-    const $progressWrap = document.getElementById('progressWrap');
-    const $step0 = document.getElementById('step0');
-    const $stepQ = document.getElementById('stepQ');
-    const $stepR = document.getElementById('stepR');
-    const $qCard = document.getElementById('qCard');
-    const $btnPrev = document.getElementById('btnPrev');
-    const $btnNext = document.getElementById('btnNext');
-
     function setProgress(){
       const pct = Math.min(100, Math.max(0, step/11*100));
       $prog.style.width = pct + '%';
@@ -273,9 +243,11 @@
       [$step0,$stepQ,$stepR].forEach(el=>el.classList.remove('show'));
       if(step===0){
         $step0.classList.add('show');
-        $btnPrev.disabled = true; $btnPrev.classList.add('hide'); 
-        $btnNext.textContent = '시작하기';
+        // 첫 화면: 이전 버튼 숨기고 시작하기만 노출
+        $btnPrev.classList.add('hide');
+        $btnPrev.disabled = true;
 				$btnNext.disabled = false;
+        $btnNext.textContent = '시작하기';
         $progressWrap.classList.remove('hide');
       } else if(step>=1 && step<=10){
         renderQuestion(step);
@@ -287,7 +259,7 @@
       } else {
         renderResult();
         $stepR.classList.add('show');
-        // 결과 페이지 요구사항: 이전 버튼/우상단 진행바 숨김
+        // 결과: 이전 버튼/프로그레스 숨김, 다시 시작만 노출
         $btnPrev.classList.add('hide');
         $btnNext.textContent = '다시 시작';
         $progressWrap.classList.add('hide');
@@ -297,13 +269,12 @@
     function renderQuestion(n){
       const q = QUESTIONS[n-1];
       const current = answers[n-1];
-      const ORIENT_AGREE_LEFT = false; 
-      const values = ORIENT_AGREE_LEFT ? [5,4,3,2,1] : [1,2,3,4,5];
-      const leftLabel  = ORIENT_AGREE_LEFT ? '그렇다' : '그렇지 않다';
-      const rightLabel = ORIENT_AGREE_LEFT ? '그렇지 않다' : '그렇다';
+      const values = [1,2,3,4,5];
+      const leftLabel = '그렇지 않다';
+      const rightLabel = '그렇다';
 
       $qCard.innerHTML = `
-        <div class="sub" style="margin-bottom:8px">문항 ${n} / ${TOTAL}</div>
+        <div class="sub" style="text-align:center;margin-bottom:8px">문항 ${n} / ${TOTAL}</div>
         <div class="q-title">${q.text}</div>
         <div class="scale" role="radiogroup" aria-label="문항 ${n}">
           <div class="likert">
@@ -318,7 +289,6 @@
           <div class="labels"><span>${leftLabel}</span><span>${rightLabel}</span></div>
         </div>
       `;
-
       $qCard.querySelectorAll('input[type=radio]').forEach(input=>{
         input.addEventListener('change', (e)=>{
           answers[n-1] = Number(e.target.value);
@@ -330,7 +300,7 @@
 
     function renderResult(){
       const {S,V,A} = calcScores();
-      const picked = pickType(S,V,A);
+      const type = pickType(S,V,A);
       const $typeName = document.getElementById('typeName');
       const $badge = document.getElementById('badge');
       const $barS = document.getElementById('barS');
@@ -339,9 +309,9 @@
       const $body = document.getElementById('resultBody');
       const $char = document.getElementById('characterNote');
 
-      const txt = TYPE_TEXT[picked.type] || {emoji:'✨', body:'', character:''};
-      $typeName.textContent = picked.type;
-      $badge.textContent = txt.emoji + ' ' + picked.type;
+      const txt = TYPE_TEXT[type] || {emoji:'✨', body:'', character:''};
+      $typeName.textContent = type;
+      $badge.textContent = txt.emoji + ' ' + type;
       $barS.style.width = S+'%';
       $barV.style.width = V+'%';
       $barA.style.width = A+'%';
@@ -349,22 +319,28 @@
       $body.innerHTML = txt.body.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       $char.textContent = txt.character;
 
-      // 결과 화면에서는 뒤로가기 금지 + 선택 초기화
-      const cleared = Array(TOTAL).fill(null);
+      // 결과 화면에서는 선택 초기화 & 이전 버튼 비활성 유지
       localStorage.removeItem('trendtest_v1');
-      for(let i=0;i<TOTAL;i++) answers[i] = cleared[i];
+      for(let i=0;i<TOTAL;i++) answers[i] = null;
     }
 
+    // -------------------------------
     // 내비게이션
-    document.getElementById('btnPrev').addEventListener('click', ()=>{ if(step>0) show(step-1); });
-    document.getElementById('btnNext').addEventListener('click', ()=>{
+    // -------------------------------
+    $btnPrev.addEventListener('click', ()=>{ if(step>0) show(step-1); });
+    $btnNext.addEventListener('click', ()=>{
       if(step===0){ show(1); return; }
       if(step>=1 && step<10){ show(step+1); return; }
-      if(step===10){ if(answers.some(v=>v==null)){ alert('모든 문항에 응답해주세요.'); return; } show(11); return; }
+      if(step===10){
+        if(answers.some(v=>v==null)){ alert('모든 문항에 응답해주세요.'); return; }
+        show(11); return;
+      }
       if(step===11){ show(0); }
     });
 
-    // 내장 테스트 (#test)
+    // -------------------------------
+    // 셀프 테스트 (#test 붙여서 확인)
+    // -------------------------------
     function selfTest(){
       const demoSets = [
         { name:'서퍼 기대', a:[5,5,5,1,5,4,3,1,5,4] },
@@ -377,8 +353,8 @@
       demoSets.forEach(set=>{
         for(let i=0;i<TOTAL;i++) answers[i]=set.a[i];
         const s = calcScores();
-        const p = pickType(s.S,s.V,s.A);
-        console.log(`[테스트] ${set.name}:`, s, p.type);
+        const t = pickType(s.S,s.V,s.A);
+        console.log(`[테스트] ${set.name}:`, s, t);
       });
       for(let i=0;i<TOTAL;i++) answers[i]=null;
     }
@@ -389,4 +365,3 @@
   </script>
 </body>
 </html>
-
