@@ -97,12 +97,12 @@
 
     <!-- STEP 11: 결과 -->
     <section class="card step" id="stepR">
-			<div id="imageSlot" class="image-slot">이미지 자리</div>
-			<br>
       <div class="result-header">
         <div id="badge" class="tag">타입</div>
-        <h3 id="typeName" style="margin:0">-</h3>
+        <h2 id="typeName" style="margin:0">-</h2>
       </div>
+			<br>
+			<div id="imageSlot" class="image-slot">이미지 자리</div>
 			<br>
 			<div id="characterNote" class="character"></div>
 			<br>
@@ -383,7 +383,7 @@
         <h4 class="section-title">전략</h4>
         <ul class="para" style="margin:0; padding-left:18px">${(txt.strategy||[]).map(li=>`<li>${li}</li>`).join('')}</ul>
       `;
-      $char.textContent = `극 중 인물로는 ${txt.character}을(를) 닮았군요!`;
+      $char.innerHTML = `극 중 인물로는 <strong>${txt.character}</strong>을(를) 닮았군요!`;
 			$imageSlot.innerHTML = `<img src="assets/${txt.image}.png" alt="${type}" class="result-img">`;
 
       // 결과 화면에서는 선택 초기화 & 이전 버튼 비활성 유지
